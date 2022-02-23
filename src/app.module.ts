@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { configValidationSchema } from './config.schema';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
 	imports: [
@@ -17,7 +18,8 @@ import { configValidationSchema } from './config.schema';
 				uri: configService.get('MONGO_URI')
 			})
 		}),
-		AuthModule
+		AuthModule,
+		ProfileModule
 	]
 })
 export class AppModule {}

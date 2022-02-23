@@ -4,7 +4,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import gravatar from 'gravatar';
+import { url } from 'gravatar';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from './jwt-payload.interface';
 
@@ -26,7 +26,6 @@ export class AuthService {
 			throw new ConflictException('User already exists');
 		}
 
-		const { url } = gravatar;
 		const salt = await bcrypt.genSalt();
 		const hashPassword = await bcrypt.hash(password, salt);
 
@@ -36,6 +35,7 @@ export class AuthService {
 			password: hashPassword,
 			avatar: url && url(email, { s: '200', r: 'pg', d: 'mm' })
 		});
+
 		return await user.save();
 	}
 

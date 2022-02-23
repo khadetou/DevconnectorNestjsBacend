@@ -42,12 +42,10 @@ export class AuthService {
 		}
 	}
 
-	async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
-		const { email, password } = authCredentialsDto;
-		const user = await this.userModel.findOne({ email });
-
+	async signIn(email: string, password: string): Promise<{ accessToken: string }> {
+		const user = await this.userModel.findOne({ email }).exec();
 		if (user && (await bcrypt.compare(password, user.password))) {
-			const payload: JwtPayload = { email: user.email };
+			const payload: JwtPayload = { email };
 			const accessToken = await this.jwtService.sign(payload);
 			return { accessToken };
 		} else {

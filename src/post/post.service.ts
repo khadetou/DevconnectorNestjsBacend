@@ -42,7 +42,8 @@ export class PostService {
 	//Delete post by id
 	async deletePostById(id: string, user: any): Promise<Post> {
 		const post = await this.postModel.findById(id).exec();
-		if (post.user.toString() !== user._id) {
+
+		if (post.user.toString() !== user._id.toString()) {
 			throw new UnauthorizedException('You are not authorized to delete this post');
 		}
 		try {

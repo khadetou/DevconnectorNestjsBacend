@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/schemas/user.schema';
@@ -26,7 +26,7 @@ export class PostController {
 	//Get post by id
 	@Get(':id')
 	@UseGuards(AuthGuard())
-	async getPostById(id: string): Promise<Posts> {
+	async getPostById(@Param('id') id: string): Promise<Posts> {
 		return this.postService.getPostById(id);
 	}
 
@@ -38,16 +38,16 @@ export class PostController {
 	}
 
 	//Like a post
-	@Post('/like/:id')
+	@Put('/like/:id')
 	@UseGuards(AuthGuard())
-	async likePost(@Param() id: string, @GetUser() user: User): Promise<Posts> {
+	async likePost(@Param('id') id: string, @GetUser() user: User): Promise<Posts> {
 		return this.postService.likePost(id, user);
 	}
 
 	//Unlike a post
-	@Post('/unlike/:id')
+	@Put('/unlike/:id')
 	@UseGuards(AuthGuard())
-	async unlikePost(@Param() id: string, @GetUser() user: User): Promise<Posts> {
+	async unlikePost(@Param('id') id: string, @GetUser() user: User): Promise<Posts> {
 		return this.postService.unlikePost(id, user);
 	}
 

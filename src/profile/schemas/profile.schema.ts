@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from 'src/auth/schemas/user.schema';
+import { boolean } from 'joi';
 
 export type ProfileDocument = Profile & Document;
 export type ExperienceDocument = Experience & Document;
@@ -45,7 +46,7 @@ export class Education {
 	@Prop({ type: Date })
 	to: Date;
 
-	@Prop({ default: false })
+	@Prop({ default: false, type: Boolean })
 	current: boolean;
 
 	@Prop() description: string;
@@ -72,17 +73,59 @@ export class Profile {
 
 	@Prop() githubusername: string;
 
-	@Prop() experience: [Experience];
+	@Prop({
+		type: [
+			{
+				title: { type: String, required: true },
+				company: { type: String, required: true },
+				location: { type: String, required: true },
+				from: { type: Date, required: true },
+				to: { type: Date },
+				current: { type: Boolean, default: false },
+				description: { type: String, required: true }
+			}
+		]
+	})
+	experience: {
+		title: string;
+		company: string;
+		location: string;
+		to: Date;
+		current: boolean;
+		description: string;
+		_id?: any;
+	}[];
 
-	@Prop() education: [Education];
+	@Prop({
+		type: [
+			{
+				school: { type: String, required: true },
+				degree: { type: String, required: true },
+				fieldofstudy: { type: String, required: true },
+				from: { type: Date, required: true },
+				to: { type: Date },
+				current: { type: Boolean, default: false },
+				description: { type: String, required: true }
+			}
+		]
+	})
+	education: {
+		school: string;
+		degree: string;
+		fieldofstudy: string;
+		to: Date;
+		current: boolean;
+		description: string;
+		_id?: any;
+	}[];
 
 	@Prop(
 		raw({
-			youtube: String,
-			twitter: String,
-			facebook: String,
-			linkedin: String,
-			instagram: String
+			youtube: { type: String },
+			twitter: { type: String },
+			facebook: { type: String },
+			linkedin: { type: String },
+			instagram: { type: String }
 		})
 	)
 	social: Record<string, any>;

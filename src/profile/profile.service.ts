@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Profile, ProfileDocument } from './schemas/profile.schema';
 import { Model } from 'mongoose';
@@ -9,6 +9,7 @@ import { User } from 'src/auth/schemas/user.schema';
 export class ProfileService {
 	constructor(@InjectModel(Profile.name) private readonly profileModel: Model<ProfileDocument>) {}
 
+	//Create / Update Profile
 	async create(createProfileDto: CreateProfileDto, user: any): Promise<Profile> {
 		let {
 			company,
@@ -64,5 +65,29 @@ export class ProfileService {
 		} catch (error) {
 			throw new InternalServerErrorException();
 		}
+	}
+
+	//Get profile by current connected user
+	async getMyProfile(user: any): Promise<Profile> {
+		const profile = await this.profileModel.findOne({ user: user._id }).populate('user', [ 'name', 'avatar' ]);
+
+		if (!profile) {
+			throw new NotFoundException('Profile not found');
+		}
+		return profile;
+	}
+
+	//Get all Profiles
+	async getAllProfiles(): Promise<Profile[]> {
+		return await this.profileModel.find().populate('user', [ 'name', 'avatar' ]);
+	}
+
+	//Get profile by user id
+	async getProfileById(userId: string): Promise<Profile> {
+		const user = await this.profileModel.findOne({ user: userId }).populate('user', [ 'name', 'avatar' ]);
+		if (!user) {
+			throw new NotFoundException('Profile not found');
+		}
+		return user;
 	}
 }

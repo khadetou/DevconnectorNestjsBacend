@@ -3,12 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Profile, ProfileDocument } from './schemas/profile.schema';
 import { Model } from 'mongoose';
 import { CreateProfileDto } from './dto/create-profile.dto';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ProfileService {
 	constructor(@InjectModel(Profile.name) private readonly profileModel: Model<ProfileDocument>) {}
 
-	async create(createProfileDto: CreateProfileDto): Promise<Profile> {
+	async create(createProfileDto: CreateProfileDto, user: any): Promise<Profile> {
 		let {
 			company,
 			website,
@@ -29,7 +30,8 @@ export class ProfileService {
 			splitSkills = skills.split(',').map((skill) => skill.trim());
 		}
 
-		const profile = new this.profileModel({
+		let profileFields = {
+			user: user._id,
 			company: company && company,
 			website: website && website,
 			location: location && location,
@@ -44,7 +46,19 @@ export class ProfileService {
 				instagram: instagram && instagram,
 				linkedin: linkedin && linkedin
 			}
-		});
+		};
+
+		let profile = await this.profileModel.findOne({ user: user._id });
+		if (profile) {
+			profile = await this.profileModel.findOneAndUpdate(
+				{ user: user._id },
+				{ $set: profileFields },
+				{ new: true }
+			);
+		} else {
+			profile = await this.profileModel.create(profileFields);
+		}
+
 		try {
 			return await profile.save();
 		} catch (error) {

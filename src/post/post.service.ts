@@ -2,16 +2,14 @@ import { Injectable, InternalServerErrorException, NotFoundException, Unauthoriz
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './schemas/post.schema';
 import { Model } from 'mongoose';
-import { createPostDto } from './dto/create-post.dto';
-import { NotFoundError } from 'rxjs';
-import { userInfo } from 'os';
+import { CreatePostDto } from './dto/create-post.dto';
 import { BadRequestException } from '@nestjs/common';
 @Injectable()
 export class PostService {
 	constructor(@InjectModel(Post.name) private readonly postModel: Model<PostDocument>) {}
 
 	//Create post
-	async createPost(createPostDto: createPostDto, user: any): Promise<Post> {
+	async createPost(createPostDto: CreatePostDto, user: any): Promise<Post> {
 		const { text, name } = createPostDto;
 		const post = new this.postModel({
 			text,
@@ -94,8 +92,8 @@ export class PostService {
 	}
 
 	//Comment on a post
-	async commentPost(createPostDto: createPostDto, id: string, user: any): Promise<Post> {
-		const { text, name } = createPostDto;
+	async commentPost(CreatePostDto: CreatePostDto, id: string, user: any): Promise<Post> {
+		const { text, name } = CreatePostDto;
 		const post = await this.postModel.findById(id).exec();
 		post.comments.unshift({
 			text,

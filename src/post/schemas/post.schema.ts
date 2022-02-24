@@ -48,8 +48,8 @@ export class Post {
 		text: string;
 		name: string;
 		avatar: string;
-		createdAt: Date;
-	};
+		_id?: any;
+	}[];
 	@Prop({ default: Date.now })
 	createdAt: Date;
 }

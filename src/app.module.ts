@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { configValidationSchema } from './config.schema';
 import { ProfileModule } from './profile/profile.module';
+import { PostModule } from './post/post.module';
 
 @Module({
 	imports: [
@@ -19,7 +20,8 @@ import { ProfileModule } from './profile/profile.module';
 			})
 		}),
 		AuthModule,
-		ProfileModule
+		ProfileModule,
+		PostModule
 	]
 })
 export class AppModule {}

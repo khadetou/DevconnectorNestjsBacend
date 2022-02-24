@@ -1,56 +1,8 @@
 import * as mongoose from 'mongoose';
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from 'src/auth/schemas/user.schema';
-import { boolean } from 'joi';
 
 export type ProfileDocument = Profile & Document;
-export type ExperienceDocument = Experience & Document;
-export type EducationDocument = Education & Document;
-
-@Schema()
-export class Experience {
-	@Prop({ required: true })
-	title: string;
-
-	@Prop({ required: true })
-	company: string;
-
-	@Prop({ required: true })
-	location: string;
-
-	@Prop({ required: true, type: Date })
-	from: Date;
-
-	@Prop({ type: Date })
-	to: Date;
-
-	@Prop({ default: false })
-	current: boolean;
-	@Prop() description: string;
-}
-
-@Schema()
-export class Education {
-	@Prop({ required: true })
-	school: string;
-
-	@Prop({ required: true })
-	degree: string;
-
-	@Prop({ required: true })
-	fieldofstudy: string;
-
-	@Prop({ required: true, type: Date })
-	from: Date;
-
-	@Prop({ type: Date })
-	to: Date;
-
-	@Prop({ default: false, type: Boolean })
-	current: boolean;
-
-	@Prop() description: string;
-}
 
 @Schema()
 export class Profile {
